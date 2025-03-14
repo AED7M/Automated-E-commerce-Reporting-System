@@ -27,15 +27,26 @@ def load_orders_data(orders_table, this_week_start_date, this_week_last_date, la
     last_week_orders_data = orders_table[last_week_mask]
     return this_week_orders_data,last_week_orders_data
 
-def load_revenue_data(orders_table, this_week_orders_data,last_week_orders_data,order_payment_table):
-    this_week_revenue_data = this_week_orders_data.merge(order_payment_table, on="order_id")
-    last_week_revenue_data = last_week_orders_data.merge(order_payment_table, on="order_id")
+def load_revenue_data(this_week_orders_data,last_week_orders_data,order_items_table):
+    this_week_revenue_data = this_week_orders_data.merge(order_items_table, on="order_id")
+    last_week_revenue_data = last_week_orders_data.merge(order_items_table, on="order_id")
+    this_week_revenue_data.drop(columns = ['customer_id','order_item_id','shipping_limit_date','freight_value','seller_id','order_estimated_delivery_date','order_delivered_carrier_date','order_approved_at'],inplace=True)
+    last_week_revenue_data.drop(columns = ['customer_id','order_item_id','shipping_limit_date','freight_value','seller_id','order_estimated_delivery_date','order_delivered_carrier_date','order_approved_at'],inplace=True)
     return this_week_revenue_data, last_week_revenue_data
 
+def load_products_data(this_week_revenue_data,last_week_revenue_data,products_table,products_names_tabel):
+    this_week_products_data = this_week_revenue_data.merge(products_table, on="product_id")
+    last_week_products_data = last_week_revenue_data.merge(products_table, on="product_id")
+    this_week_products_data.drop(columns=['product_width_cm','product_height_cm','product_length_cm','product_weight_g','product_photos_qty','product_description_lenght','product_name_lenght','product_id','order_status','order_id'],inplace=True)
+    last_week_products_data.drop(columns=['product_width_cm','product_height_cm','product_length_cm','product_weight_g','product_photos_qty','product_description_lenght','product_name_lenght','product_id','order_status','order_id'],inplace=True)
+    this_week_products_data = last_week_products_data.merge(products_names_tabel, on="product_category_name")
+    last_week_products_data = last_week_products_data.merge(products_names_tabel, on="product_category_name")
+    return this_week_products_data,last_week_products_data
 
 
-
-
-
-
-
+def load_operational_insights_data(this_week_revenue_data,last_week_revenue_data,order_reviews_table):
+    this_week_operational_insights_data = this_week_revenue_data.merge(order_reviews_table,on="order_id")
+    last_week_operational_insights_data =last_week_revenue_data.merge(order_reviews_table,on="order_id")
+    this_week_operational_insights_data.drop(columns=['review_answer_timestamp','review_creation_date','review_comment_message','review_comment_title','review_id','product_id','price','order_id'],inplace=True)
+    last_week_operational_insights_data.drop(columns=['review_answer_timestamp','review_creation_date','review_comment_message','review_comment_title','review_id','product_id','price','order_id'],inplace=True)
+    return this_week_operational_insights_data,last_week_operational_insights_data
