@@ -101,8 +101,7 @@ def calculate_average_order_value(this_week_revenue_data, last_week_revenue_data
     
     return this_week_average_order_value, last_week_average_order_value, percent_change, sign, trend
 
-
-def get_top_category_metrics(this_week_products_data, last_week_products_data):
+def get_top_category_metrics(this_week_products_data, last_week_products_data, max_categories=3):
     """
     Identify top product categories by sales and calculate related metrics.
     
@@ -110,19 +109,20 @@ def get_top_category_metrics(this_week_products_data, last_week_products_data):
         this_week_products_data (DataFrame): Current week's product data with columns:
                                            'product_category_name_english' and 'price'
         last_week_products_data (DataFrame): Previous week's product data with same columns
+        max_categories (int, optional): Maximum number of top categories to return (default: 3)
     
     Returns:
         tuple: Multiple tuples containing:
-            - this_week_top_categories: Top 3 categories by sales for current week
-            - this_week_top_products_sales: Sales amount for top 3 categories
+            - this_week_top_categories: Top categories by sales for current week
+            - this_week_top_products_sales: Sales amount for top categories
             - daily_order_rates: Average daily orders for top categories (rounded up)
             - last_week_sales: Sales amount for the same categories in previous week
             - percent_changes: Percentage changes between weeks for each category
             - signs: '+', '-', or '' for each category
             - trends: 'positive', 'negative', or 'neutral' for each category
     """
-    # Get this week's top 3 categories and their sales
-    this_week_data = this_week_products_data.groupby('product_category_name_english')['price'].sum().nlargest(3)
+    # Get this week's top categories and their sales
+    this_week_data = this_week_products_data.groupby('product_category_name_english')['price'].sum().nlargest(max_categories)
     this_week_top_categories = tuple(this_week_data.index)
     this_week_top_products_sales = tuple(this_week_data.values)
     

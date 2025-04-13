@@ -184,3 +184,46 @@ def load_operational_insights_data(this_week_revenue_data, last_week_revenue_dat
     this_week_operational_insights_data.drop(columns=['review_answer_timestamp', 'review_creation_date', 'review_comment_message', 'review_comment_title', 'review_id', 'product_id', 'price', 'order_id'], inplace=True)
     last_week_operational_insights_data.drop(columns=['review_answer_timestamp', 'review_creation_date', 'review_comment_message', 'review_comment_title', 'review_id', 'product_id', 'price', 'order_id'], inplace=True)
     return this_week_operational_insights_data, last_week_operational_insights_data
+
+def prepare_sales_trend_data(revenue_data):
+    """
+    Prepare daily aggregated sales and order data for trend visualization,
+    grouped by day of week.
+    
+    Args:
+        revenue_data (pandas.DataFrame): Revenue data with order_purchase_timestamp and price columns
+        
+    Returns:
+        tuple: Three lists containing:
+            - day_names: List of day names (Mon, Tue, etc.)
+            - daily_revenue: List of total revenue values for each day
+            - order_counts: List of order counts for each day
+    """
+    # Ensure timestamp is datetime type
+    daily_data = revenue_data.copy()
+    daily_data['order_purchase_timestamp'] = pd.to_datetime(daily_data['order_purchase_timestamp'])
+    
+    # Extract day of week information
+    daily_data['day_of_week'] = daily_data['order_purchase_timestamp'].dt.dayofweek  # 0=Monday, 6=Sunday
+    daily_data['day_name'] = daily_data['order_purchase_timestamp'].dt.day_name()
+    daily_data['day_abbr'] = daily_data['order_purchase_timestamp'].dt.strftime('%a')
+    
+    # Group by day of week to get daily totals
+    grouped_revenue = daily_data.groupby('day_of_week').agg({
+        'price': 'sum',
+        'day_abbr': 'first'  # Get the day abbreviation
+    })
+    
+    # Count unique orders per day of week
+    order_counts = daily_data.groupby('day_of_week')['order_id'].nunique()
+    
+    # Sort by day of week (Monday first)
+    grouped_revenue = grouped_revenue.sort_index()
+    order_counts = order_counts.sort_index()
+    
+    # Create lists for visualization function
+    day_names = grouped_revenue['day_abbr'].tolist()
+    revenue_values = grouped_revenue['price'].tolist()
+    count_values = order_counts.tolist()
+    
+    return day_names, revenue_values, count_values
