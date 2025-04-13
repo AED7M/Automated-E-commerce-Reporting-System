@@ -2,11 +2,8 @@
 
 A Python-based system for generating beautiful, comprehensive reports from e-commerce data. This tool automatically processes transaction data, calculates key metrics, generates insights, creates visualizations, and packages everything in an HTML report.
 
-<<<<<<< HEAD
 ![Example Report](/Example%20Report.png)
 
-=======
->>>>>>> 06c576efa6c3ecf3abe6d24829885100fcdecea2
 ## Table of Contents
 
 - [Features](#features)
