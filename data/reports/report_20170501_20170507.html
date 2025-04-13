@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce Analytics Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="report_template.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="https://placeholder.com/wp-content/uploads/2018/10/placeholder.com-logo1.png" alt="Company Logo">
+            </div>
+            <div class="report-info">
+                <h1>E-commerce Analytics Report</h1>
+                <p>Report Period: <span id="report-period">2017-05-01 - 2017-05-07</span></p>
+            </div>
+        </header>
+
+        <section class="executive-summary">
+            <h2>Executive Summary</h2>
+            <p>This week's e-commerce performance showed growth with a +0.3% positive trend in total revenue and a +7.8% positive trend in total orders. Average order value decreased by 6.9%, suggesting a shift toward lower-priced items. Our top-performing product category was Health Beauty, which saw a 75.2% increase in sales compared to last week with an average of 9 daily orders. </p>
+        </section>
+
+        <section class="key-kpis">
+            <h2>Key Performance Indicators</h2>
+            <div class="metric-cards">
+                <div class="metric-card">
+                    <h3>Total Revenue</h3>
+                    <p class="metric-value">$83,972.32</p>
+                    <p class="metric-change positive">
+                        +0.3%
+                    </p>
+                </div>
+                <div class="metric-card">
+                    <h3>Number of Orders</h3>
+                    <p class="metric-value">750</p>
+                    <p class="metric-change positive">
+                        +7.8%
+                    </p>
+                </div>
+                <div class="metric-card">
+                    <h3>Average Order Value</h3>
+                    <p class="metric-value">$111.96</p>
+                    <p class="metric-change negative">
+                        -6.9%
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="sales-performance">
+            <h2>Sales Performance</h2>
+            <div class="chart" id="sales-trend-chart">
+                <img src="../assets/plots/sales_trend_20170501_20170507.png" alt="Sales Trend Chart">
+            </div>
+            <div class="insights">
+                <h3>Key Insights</h3>
+                <ul>
+                    
+                    <li>This week's sales were +0.3% higher than last week's.</li>
+                    
+                    <li>Peak sales day was Tue, with revenue of $17,640.20 and 125 orders.</li>
+                    
+                    <li>Weekend sales represented 19.3% of total weekly revenue, indicating stronger weekday performance.</li>
+                    
+                </ul>
+            </div>
+        </section>
+
+        <section class="product-performance">
+            <h2>Product Performance</h2>
+            <div class="chart" id="top-categories-chart">
+                <img src="../assets/plots/top_categories_20170501_20170507.png" alt="Top 5 Product Categories Chart">
+            </div>
+            <div class="table" id="category-comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>This Week</th>
+                            <th>Last Week</th>
+                            <th>Change</th>
+                            <th>Avg. Order Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td>Health Beauty</td>
+                            <td>$9,163.52</td>
+                            <td>$5,231.05</td>
+                            <td class="positive">
+                                +75.2%
+                            </td>
+                            <td>9 orders/day</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>Sports Leisure</td>
+                            <td>$8,315.88</td>
+                            <td>$6,720.37</td>
+                            <td class="positive">
+                                +23.7%
+                            </td>
+                            <td>10 orders/day</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>Cool Stuff</td>
+                            <td>$5,911.68</td>
+                            <td>$4,577.63</td>
+                            <td class="positive">
+                                +29.1%
+                            </td>
+                            <td>6 orders/day</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>Garden Tools</td>
+                            <td>$5,460.34</td>
+                            <td>$4,788.89</td>
+                            <td class="positive">
+                                +14.0%
+                            </td>
+                            <td>5 orders/day</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>Bed Bath Table</td>
+                            <td>$5,009.21</td>
+                            <td>$6,207.51</td>
+                            <td class="negative">
+                                -19.3%
+                            </td>
+                            <td>9 orders/day</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="insights">
+                <h3>Product Insights</h3>
+                <ul>
+                    
+                    <li>Health Beauty continues to be a top-performing category, with a significant 75.2% growth.</li>
+                    
+                    <li>Sports Leisure continues to be a top-performing category, with a significant 23.7% growth.</li>
+                    
+                    <li>Cool Stuff continues to be a top-performing category, with a significant 29.1% growth.</li>
+                    
+                </ul>
+            </div>
+        </section>
+
+        <section class="operational-insights">
+            <h2>Operational Insights</h2>
+            <div class="metric-cards">
+                <div class="metric-card">
+                    <h3>Average Delivery Time</h3>
+                    <p class="metric-value">13.3 days</p>
+                    <p class="metric-change positive">
+                        +1.2 days
+                    </p>
+                </div>
+                <div class="metric-card">
+                    <h3>Average Order Rating</h3>
+                    <p class="metric-value">4.1/5.0</p>
+                    <p class="metric-change positive">
+                        +0.1
+                    </p>
+                </div>
+            </div>
+            <div class="insights">
+                <h3>Operational Insights</h3>
+                <ul>
+                    
+                    <li>Average delivery time improved to 13.3 days, +8.2% faster than last week's 14.5 days.</li>
+                    
+                    <li>Customer satisfaction improved to 4.1/5.0 (↑ 0.1 points), showing positive customer reception.</li>
+                    
+                </ul>
+            </div>
+        </section>
+
+        <footer>
+            <p>Report generated on 2025-04-13 at 21:51:23</p>
+            <p>For questions or concerns, please contact <a href="mailto:analytics@example.com">analytics@example.com</a></p>
+        </footer>
+    </div>
+</body>
+</html>
