@@ -125,44 +125,43 @@ def generate_product_insights(top_category_data):
     
     return category_insights[0], category_insights[1], category_insights[2]
 
-def generate_operational_insights(delivery_time_data, order_rating_data):
+def generate_operational_insights(delivery_time_data, satisfaction_data):
     """
-    Generate operational insights as individual bullet points.
+    Generate insights about operational metrics like delivery time and customer satisfaction.
     
+    Args:
+        delivery_time_data (tuple): Current and previous delivery time metrics
+        satisfaction_data (tuple): Current and previous satisfaction metrics
+        
     Returns:
-        tuple: (delivery_insight, satisfaction_insight)
+        list: List of insight statements about operational metrics
     """
-    this_week_time, last_week_time, percent_change, sign, trend = delivery_time_data
-    time_diff = abs(last_week_time - this_week_time)
+    this_week_delivery_time, last_week_delivery_time, percent_change, sign, trend = delivery_time_data
     
-    delivery_insight = f"Delivery times have "
+    # Create delivery time insight
     if trend == 'positive':
-        delivery_insight += f"improved by {time_diff:.1f} days on average"
-        delivery_insight += ", significantly enhancing customer experience." if percent_change > 10 else \
-                           ", showing incremental efficiency gains."
+        delivery_message = f"Average delivery time improved to {this_week_delivery_time:.1f} days, {sign}{percent_change}% faster than last week's {last_week_delivery_time:.1f} days."
     elif trend == 'negative':
-        delivery_insight += f"increased by {time_diff:.1f} days on average"
-        delivery_insight += ", indicating logistics challenges to address." if percent_change > 10 else \
-                           ", suggesting need for process optimization."
+        delivery_message = f"Average delivery time increased to {this_week_delivery_time:.1f} days, {sign}{percent_change}% slower than last week's {last_week_delivery_time:.1f} days."
     else:
-        delivery_insight += "remained stable, maintaining consistent fulfillment times."
+        delivery_message = f"Average delivery time remained stable at {this_week_delivery_time:.1f} days."
     
-    this_week_rating, difference, sign, trend = order_rating_data
+    this_week_rating, difference, sign, trend = satisfaction_data
     
-    satisfaction_insight = f"Customer satisfaction "
+    # Create satisfaction insight
     if trend == 'positive':
-        satisfaction_insight += f"improved to {this_week_rating:.1f}/5.0"
+        satisfaction_message = f"Customer satisfaction improved to {this_week_rating:.1f}/5.0"
         if difference > 0:
-            satisfaction_insight += f" (↑ {difference} points)"
-        satisfaction_insight += ", reflecting substantial service enhancements." if difference >= 0.3 else \
+            satisfaction_message += f" (↑ {difference} points)"
+        satisfaction_message += ", reflecting substantial service enhancements." if difference >= 0.3 else \
                               ", showing positive customer reception."
     elif trend == 'negative':
-        satisfaction_insight += f"declined to {this_week_rating:.1f}/5.0"
+        satisfaction_message = f"Customer satisfaction declined to {this_week_rating:.1f}/5.0"
         if difference > 0:
-            satisfaction_insight += f" (↓ {difference} points)"
-        satisfaction_insight += ", requiring immediate attention." if difference >= 0.3 else \
+            satisfaction_message += f" (↓ {difference} points)"
+        satisfaction_message += ", requiring immediate attention." if difference >= 0.3 else \
                               ", suggesting opportunities for improvement."
     else:
-        satisfaction_insight += f"remained steady at {this_week_rating:.1f}/5.0, maintaining consistent service standards."
+        satisfaction_message = f"Customer satisfaction remained steady at {this_week_rating:.1f}/5.0, maintaining consistent service standards."
     
-    return delivery_insight, satisfaction_insight
+    return [delivery_message, satisfaction_message]

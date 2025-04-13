@@ -48,13 +48,17 @@ def setup_visualization_style(colors=None):
     sns.set_theme(style="whitegrid", font='sans-serif')
     sns.set_palette(custom_palette)
     
+    # Use consistent font sizes 
     plt.rcParams['axes.titlesize'] = 16
     plt.rcParams['axes.labelsize'] = 12
     plt.rcParams['xtick.labelsize'] = 10
     plt.rcParams['ytick.labelsize'] = 10
     plt.rcParams['legend.fontsize'] = 10
     plt.rcParams['figure.titlesize'] = 20
-    plt.rcParams['figure.figsize'] = (9, 4.5)
+    
+    # Set a fixed figure size that matches the report width
+    # This ensures consistently sized charts that don't look stretched
+    plt.rcParams['figure.figsize'] = (10, 6)  # Standard 16:9 aspect ratio
     plt.rcParams['figure.dpi'] = 150
     
     return colors
@@ -83,15 +87,18 @@ def create_sales_trend_chart(day_names,
     def currency_formatter(x, pos):
         return f'${x:,.0f}'
     
-    fig, ax1 = plt.subplots(figsize=(9, 7))
+    fig, ax1 = plt.subplots(figsize=(10, 6))
     ax2 = ax1.twinx()
     
+    # Adjust bar width for better proportions
+    bar_width = 0.6
     bars = ax2.bar(np.arange(len(sales_data)), sales_data['Orders'], 
-                  color=colors['highlight'], alpha=0.6, width=0.5)
+                  color=colors['highlight'], alpha=0.6, width=bar_width)
     
+    # Use thicker lines for better visibility
     line = ax1.plot(np.arange(len(sales_data)), sales_data['Revenue'], 
                    marker='o', linestyle='-', linewidth=2.5, 
-                   color=colors['primary'], markerfacecolor='black', 
+                   color=colors['primary'], markerfacecolor='white', 
                    markeredgecolor=colors['primary'], markersize=8)
     
     ax1.set_ylabel('Daily Revenue ($)', color=colors['primary'], fontweight='bold')
@@ -104,22 +111,24 @@ def create_sales_trend_chart(day_names,
     ax1.set_xticks(range(len(sales_data)))
     ax1.set_xticklabels(sales_data['Day'])
     
-    ax1.set_ylim(0, ax1.get_ylim()[1])
-    ax2.set_ylim(0, ax2.get_ylim()[1])
+    # Set y-axis limits with 10% padding for better visualization
+    ax1.set_ylim(0, max(daily_revenue) * 1.1)
+    ax2.set_ylim(0, max(order_counts) * 1.1)
     
-    ax1.set_title('E-commerce Sales Performance', fontweight='bold', pad=15)
+    ax1.set_title('Daily Sales Performance', fontweight='bold', pad=15)
     
-    ax1.grid(True, axis='both', alpha=0.2, linestyle='--')
+    ax1.grid(True, axis='y', alpha=0.2, linestyle='--')
     ax2.grid(False)
     
+    # Place legend outside plot area to avoid overlapping with data
     custom_lines = [
-        plt.Line2D([0], [0], color=colors['primary'], lw=2.5, marker='o', markerfacecolor='black'),
+        plt.Line2D([0], [0], color=colors['primary'], lw=2.5, marker='o', markerfacecolor='white'),
         plt.Rectangle((0, 0), 1, 1, color=colors['highlight'], alpha=0.6)
     ]
     
     legend = ax1.legend(custom_lines, ['Revenue', 'Number of Orders'], 
               loc='upper center', 
-              bbox_to_anchor=(0.5, 1.15),
+              bbox_to_anchor=(0.5, -0.12),
               frameon=True,
               framealpha=0.9,
               ncol=2)
@@ -127,7 +136,8 @@ def create_sales_trend_chart(day_names,
     legend.get_frame().set_facecolor('white')
     legend.get_frame().set_edgecolor('none')
     
-    plt.tight_layout(rect=[0.02, 0.05, 0.98, 0.9])
+    # Use tight layout with adjusted padding
+    plt.tight_layout(rect=[0.02, 0.05, 0.98, 0.95])
     
     try:
         plt.savefig(output_path, dpi=150, bbox_inches='tight')
@@ -186,30 +196,43 @@ def create_top_categories_chart(categories,
     
     category_data.sort_values('Sales', ascending=False, inplace=True)
     
-    fig_width = min(10, 1.5 + len(category_data) * 1.7)
-    plt.figure(figsize=(fig_width, 6))
+    plt.figure(figsize=(10, 6))
+    
+    # Adjust bar width based on number of categories
+    bar_width = 0.65
+    if len(category_data) <= 3:
+        bar_width = 0.5
     
     bar_plot = sns.barplot(
         x='Category', 
         y='Sales', 
         data=category_data,
         color=colors['primary'],
-        width=0.65
+        width=bar_width
     )
     
     def currency_formatter(x, pos):
         return f'${x:,.0f}'
     bar_plot.yaxis.set_major_formatter(FuncFormatter(currency_formatter))
     
-    plt.title('Top-Performing Product Categories', fontweight='bold', pad=20)
+    plt.title('Top Product Categories by Revenue', fontweight='bold', pad=20)
     plt.ylabel('Revenue ($)', fontweight='bold')
     plt.xlabel('')
-    plt.xticks(rotation=30, ha='right')
     
-    plt.ylim(0, max(sales) * 1.05)
+    # Improve readability of category labels
+    plt.xticks(rotation=25, ha='right')
+    
+    # Add 10% padding at the top for better visualization
+    plt.ylim(0, max(sales) * 1.1)
     
     plt.grid(axis='y', alpha=0.2, linestyle='--')
-    plt.tight_layout(pad=1.5)
+    
+    # Add value labels on top of each bar for better readability
+    for i, v in enumerate(category_data['Sales']):
+        bar_plot.text(i, v + (max(sales) * 0.02), f"${v:,.0f}", 
+                     color='black', ha='center', fontweight='bold', fontsize=9)
+    
+    plt.tight_layout()
     
     try:
         plt.savefig(output_path, dpi=150, bbox_inches='tight')

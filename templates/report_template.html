@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce Analytics Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="report_template.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="https://placeholder.com/wp-content/uploads/2018/10/placeholder.com-logo1.png" alt="Company Logo">
+            </div>
+            <div class="report-info">
+                <h1>E-commerce Analytics Report</h1>
+                <p>Report Period: <span id="report-period">{{ report_dates.this_week_start }} - {{ report_dates.this_week_end }}</span></p>
+            </div>
+        </header>
+
+        <section class="executive-summary">
+            <h2>Executive Summary</h2>
+            <p>{{ executive_summary }}</p>
+        </section>
+
+        <section class="key-kpis">
+            <h2>Key Performance Indicators</h2>
+            <div class="metric-cards">
+                <div class="metric-card">
+                    <h3>Total Revenue</h3>
+                    <p class="metric-value">${{ metrics.revenue.this_week|format_currency }}</p>
+                    <p class="metric-change {{ 'positive' if metrics.revenue.trend == 'positive' else 'negative' if metrics.revenue.trend == 'negative' else '' }}">
+                        {{ metrics.revenue.sign }}{{ metrics.revenue.percent_change }}%
+                    </p>
+                </div>
+                <div class="metric-card">
+                    <h3>Number of Orders</h3>
+                    <p class="metric-value">{{ metrics.orders.this_week }}</p>
+                    <p class="metric-change {{ 'positive' if metrics.orders.trend == 'positive' else 'negative' if metrics.orders.trend == 'negative' else '' }}">
+                        {{ metrics.orders.sign }}{{ metrics.orders.percent_change }}%
+                    </p>
+                </div>
+                <div class="metric-card">
+                    <h3>Average Order Value</h3>
+                    <p class="metric-value">${{ metrics.aov.this_week|format_currency }}</p>
+                    <p class="metric-change {{ 'positive' if metrics.aov.trend == 'positive' else 'negative' if metrics.aov.trend == 'negative' else '' }}">
+                        {{ metrics.aov.sign }}{{ metrics.aov.percent_change }}%
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="sales-performance">
+            <h2>Sales Performance</h2>
+            <div class="chart" id="sales-trend-chart">
+                <img src="{{ sales_trend_path }}" alt="Sales Trend Chart">
+            </div>
+            <div class="insights">
+                <h3>Key Insights</h3>
+                <ul>
+                    {% for insight in sales_insights %}
+                    <li>{{ insight }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+
+        <section class="product-performance">
+            <h2>Product Performance</h2>
+            <div class="chart" id="top-categories-chart">
+                <img src="{{ top_categories_path }}" alt="Top 5 Product Categories Chart">
+            </div>
+            <div class="table" id="category-comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>This Week</th>
+                            <th>Last Week</th>
+                            <th>Change</th>
+                            <th>Avg. Order Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in range(5) if i < metrics.categories.top_categories|length %}
+                        <tr>
+                            <td>{{ metrics.categories.top_categories[i] }}</td>
+                            <td>${{ metrics.categories.top_sales[i]|format_currency }}</td>
+                            <td>${{ metrics.categories.last_week_sales[i]|format_currency }}</td>
+                            <td class="{{ 'positive' if metrics.categories.trends[i] == 'positive' else 'negative' if metrics.categories.trends[i] == 'negative' else '' }}">
+                                {{ metrics.categories.signs[i] }}{{ metrics.categories.percent_changes[i] }}%
+                            </td>
+                            <td>{{ metrics.categories.daily_rates[i] }} orders/day</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="insights">
+                <h3>Product Insights</h3>
+                <ul>
+                    {% for insight in product_insights %}
+                    <li>{{ insight }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+
+        <section class="operational-insights">
+            <h2>Operational Insights</h2>
+            <div class="metric-cards">
+                <div class="metric-card">
+                    <h3>Average Delivery Time</h3>
+                    <p class="metric-value">{{ metrics.delivery.this_week|round(1) }} days</p>
+                    <p class="metric-change {{ 'positive' if metrics.delivery.trend == 'positive' else 'negative' if metrics.delivery.trend == 'negative' else '' }}">
+                        {{ metrics.delivery.sign }}{{ delivery_time_diff|round(1) }} days
+                    </p>
+                </div>
+                <div class="metric-card">
+                    <h3>Average Order Rating</h3>
+                    <p class="metric-value">{{ metrics.satisfaction.this_week|round(1) }}/5.0</p>
+                    <p class="metric-change {{ 'positive' if metrics.satisfaction.trend == 'positive' else 'negative' if metrics.satisfaction.trend == 'negative' else '' }}">
+                        {{ metrics.satisfaction.sign }}{{ metrics.satisfaction.difference }}
+                    </p>
+                </div>
+            </div>
+            <div class="insights">
+                <h3>Operational Insights</h3>
+                <ul>
+                    {% for insight in operational_insights %}
+                    <li>{{ insight }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+
+        <footer>
+            <p>Report generated on {{ generation_date }}</p>
+            <p>For questions or concerns, please contact <a href="mailto:analytics@example.com">analytics@example.com</a></p>
+        </footer>
+    </div>
+</body>
+</html>
+

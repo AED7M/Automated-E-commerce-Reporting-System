@@ -205,7 +205,8 @@ def calculate_average_delivery_time(this_week_operational_insights_data, last_we
     """
     Calculate average delivery time metrics comparing current week to previous week.
     
-    Note: For delivery time, a reduction (negative change) is considered positive.
+    Note: For delivery time, an increase (positive change) is considered negative,
+    since longer delivery times are worse for customer experience.
     
     Args:
         this_week_operational_insights_data (DataFrame): Current week's operational data
@@ -222,7 +223,8 @@ def calculate_average_delivery_time(this_week_operational_insights_data, last_we
     this_week_mean_delivery_time = get_mean_delivery_time(this_week_operational_insights_data)
     last_week_mean_delivery_time = get_mean_delivery_time(last_week_operational_insights_data)
     
-    # For delivery time, a reduction is positive, so we use inverse_trend=True
+    # For delivery time, an increase is negative (since faster delivery is better)
+    # so we use inverse_trend=True
     percent_change, sign, trend = calculate_percent_change(
         this_week_mean_delivery_time, 
         last_week_mean_delivery_time, 
