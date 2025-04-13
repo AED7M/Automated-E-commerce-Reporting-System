@@ -204,7 +204,7 @@ def prepare_sales_trend_data(revenue_data):
     daily_data['order_purchase_timestamp'] = pd.to_datetime(daily_data['order_purchase_timestamp'])
     
     # Extract day of week information
-    daily_data['day_of_week'] = daily_data['order_purchase_timestamp'].dt.dayofweek  # 0=Monday, 6=Sunday
+    daily_data['day_of_week'] = daily_data['order_purchase_timestamp'].dt.dayofweek  
     daily_data['day_name'] = daily_data['order_purchase_timestamp'].dt.day_name()
     daily_data['day_abbr'] = daily_data['order_purchase_timestamp'].dt.strftime('%a')
     
