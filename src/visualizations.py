@@ -69,8 +69,8 @@ def create_sales_trend_chart(day_names,
                            output_path='sales_trend_chart.png'):
     """
     Create a combination chart showing sales trends by day of week:
-    - Line chart for revenue
-    - Bar chart for number of orders
+    - Line chart for revenue (drawn on top)
+    - Bar chart for number of orders (drawn behind)
     """
     if not day_names or not daily_revenue or not order_counts or len(day_names) != len(daily_revenue) or len(day_names) != len(order_counts):
         print("Error: Invalid input data for sales trend chart")
@@ -87,20 +87,34 @@ def create_sales_trend_chart(day_names,
     def currency_formatter(x, pos):
         return f'${x:,.0f}'
     
+    # Create the figure with proper stacking order
     fig, ax1 = plt.subplots(figsize=(10, 6))
+    
+    # Create a second y-axis that shares the same x-axis
     ax2 = ax1.twinx()
     
-    # Adjust bar width for better proportions
+    # Set zorder for the axes to control which appears on top
+    # Lower zorder means further back in the stack
+    ax2.set_zorder(1)  # Bar chart axis in back
+    ax1.set_zorder(2)  # Line chart axis in front
+    
+    # Make the line chart panel transparent so bars are visible
+    ax1.patch.set_visible(False)
+    
+    # Draw bars with lower zorder (places them behind)
     bar_width = 0.6
     bars = ax2.bar(np.arange(len(sales_data)), sales_data['Orders'], 
-                  color=colors['highlight'], alpha=0.6, width=bar_width)
+                  color=colors['highlight'], alpha=0.6, width=bar_width,
+                  zorder=1)  # Lower zorder for bars
     
-    # Use thicker lines for better visibility
+    # Draw line with higher zorder (places it in front)
     line = ax1.plot(np.arange(len(sales_data)), sales_data['Revenue'], 
                    marker='o', linestyle='-', linewidth=2.5, 
                    color=colors['primary'], markerfacecolor='white', 
-                   markeredgecolor=colors['primary'], markersize=8)
+                   markeredgecolor=colors['primary'], markersize=8,
+                   zorder=5)  # Higher zorder for line
     
+    # Configure axes labels and formatting
     ax1.set_ylabel('Daily Revenue ($)', color=colors['primary'], fontweight='bold')
     ax1.tick_params(axis='y', colors=colors['primary'])
     ax1.yaxis.set_major_formatter(FuncFormatter(currency_formatter))
@@ -117,10 +131,11 @@ def create_sales_trend_chart(day_names,
     
     ax1.set_title('Daily Sales Performance', fontweight='bold', pad=15)
     
-    ax1.grid(True, axis='y', alpha=0.2, linestyle='--')
+    # Configure grid
+    ax1.grid(True, axis='y', alpha=0.2, linestyle='--', zorder=0)  # Grid at the very back
     ax2.grid(False)
     
-    # Place legend outside plot area to avoid overlapping with data
+    # Legend
     custom_lines = [
         plt.Line2D([0], [0], color=colors['primary'], lw=2.5, marker='o', markerfacecolor='white'),
         plt.Rectangle((0, 0), 1, 1, color=colors['highlight'], alpha=0.6)
