@@ -250,14 +250,16 @@ def calculate_average_order_rating(this_week_operational_insights_data, last_wee
     last_week_average_order_rating = last_week_operational_insights_data['review_score'].mean()
     
     # Calculate the difference (not percentage)
-    difference = this_week_average_order_rating - last_week_average_order_rating
+    raw_difference = this_week_average_order_rating - last_week_average_order_rating
     
-    # Determine sign and trend
-    if difference == 0:
+    # Determine sign and trend with proper threshold to avoid tiny differences
+    if abs(raw_difference) < 0.05: 
+        difference = 0.0
         sign = ''
         trend = 'neutral'
     else:
-        sign = '+' if difference > 0 else '-'
-        trend = 'positive' if difference > 0 else 'negative'
+        difference = round(abs(raw_difference), 1)
+        sign = '+' if raw_difference > 0 else '-'
+        trend = 'positive' if raw_difference > 0 else 'negative'
     
-    return this_week_average_order_rating, round(abs(difference), 1), sign, trend
+    return this_week_average_order_rating, difference, sign, trend
